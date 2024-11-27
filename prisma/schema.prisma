@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum IngredientEnum {
+  SUGAR
+  FLUOR
+  MILK
+  EGG
+  BUTTER
+  SALT
+  CHOCOLATE
+  CREAM
+  CHOCOLATE_POWDER
+  OIL
+  MILK_CREAM
+  FERMENT
+}
+
+enum QuantityEnum {
+  CUP
+  UNIT
+  LITRE
+  SOUP_SPOON
+  BOX
+  BAR
+}
+
+enum CategoryEnum {
+  LUNCH
+  DESSERT
+  DINNER
+}
+
+model Recipe {
+  id           Int      @id @default(autoincrement())
+  title        String
+  description  String
+  servings     Int
+  prepTime     Int
+  cookTime     Int
+  instructions String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  photo        String
+  authorId     String
+
+  // Relacionamentos com ingredientes e categorias
+  ingredients RecipeIngredient[]
+  categories  Category[]
+
+  @@map("recipes")
+}
+
+// Modelo que liga receitas aos ingredientes e define quantidade
+model RecipeIngredient {
+  id            Int            @id @default(autoincrement())
+  recipe        Recipe         @relation(fields: [recipeId], references: [id])
+  recipeId      Int
+  ingredient    IngredientEnum
+  quantity      String
+  quantity_type QuantityEnum
+
+  @@map("recipe_ingredients")
+}
+
+// Modelo de categorias da receita
+model Category {
+  id      Int          @id @default(autoincrement())
+  name    CategoryEnum
+  recipes Recipe[]
+
+  @@map("categories")
+}
