@@ -7,6 +7,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Recipe {
+  id           Int                @id @default(autoincrement())
+  title        String
+  description  String
+  servings     Int
+  prepTime     Int
+  cookTime     Int
+  instructions String
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  photo        String
+  authorId     String
+  categories   RecipeCategory[] // Relacionamento com categorias
+  ingredients  RecipeIngredient[] // Relacionamento com ingrediente
+
+  @@map("recipes")
+}
+
+model Ingredient {
+  id      Int                @id @default(autoincrement())
+  name    IngredientEnum     @unique
+  recipes RecipeIngredient[] // Relacionamento com tabela intermediária
+
+  @@map("ingredients")
+}
+
+model Category {
+  id      Int              @id @default(autoincrement())
+  name    CategoryEnum     @unique // Cada categoria é única no sistema
+  recipes RecipeCategory[] // Relacionamento com tabela intermediária
+
+  @@map("categories")
+}
+
+model RecipeIngredient {
+  id            Int          @id @default(autoincrement())
+  recipeId      Int // Relacionamento com Recipe
+  ingredientId  Int // Relacionamento com Ingredient
+  quantity      String // Quantidade específica para a receita
+  quantity_type QuantityEnum // Unidade de medida específica para a receita
+  recipe        Recipe       @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient    Ingredient   @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, ingredientId]) // Garante que um ingrediente só seja relacionado uma vez por receita
+  @@map("recipe_ingredients")
+}
+
+model RecipeCategory {
+  id         Int      @id @default(autoincrement())
+  recipeId   Int // Relacionamento com Recipe
+  categoryId Int // Relacionamento com Category
+  recipe     Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, categoryId]) // Garante que uma receita tenha categorias únicas
+  @@map("recipe_categories")
+}
+
 enum IngredientEnum {
   SUGAR
   FLUOR
@@ -35,45 +93,4 @@ enum CategoryEnum {
   LUNCH
   DESSERT
   DINNER
-}
-
-model Recipe {
-  id           Int      @id @default(autoincrement())
-  title        String
-  description  String
-  servings     Int
-  prepTime     Int
-  cookTime     Int
-  instructions String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  photo        String
-  authorId     String
-
-  // Relacionamentos com ingredientes e categorias
-  ingredients RecipeIngredient[]
-  categories  Category[]
-
-  @@map("recipes")
-}
-
-// Modelo que liga receitas aos ingredientes e define quantidade
-model RecipeIngredient {
-  id            Int            @id @default(autoincrement())
-  recipe        Recipe         @relation(fields: [recipeId], references: [id])
-  recipeId      Int
-  ingredient    IngredientEnum
-  quantity      String
-  quantity_type QuantityEnum
-
-  @@map("recipe_ingredients")
-}
-
-// Modelo de categorias da receita
-model Category {
-  id      Int          @id @default(autoincrement())
-  name    CategoryEnum
-  recipes Recipe[]
-
-  @@map("categories")
 }
