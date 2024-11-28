@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { createRecipe } from "./_data/createRecipe";
 import { getAllRecipes } from "./_data/readRecipe";
 import { INGREDIENTS_BY_ID, CATEGORY_BY_ID, QUANTITY_TYPE_LABEL } from "./_utils/constants";
+import Header from "./_components/header";
+import { getUserId } from "./_utils/getuserId";
 
 type RecipeProps = {
   id: number;
@@ -27,6 +29,7 @@ type RecipeProps = {
 
 const Home = () => {
   const [recipes, setRecipes] = useState<Array<RecipeProps>>([]);
+  const [userId, setUserId] = useState<string>("");
   const handleAddRecipe = async () => {
     await createRecipe({
       title: "Bolo de Leitinho",
@@ -46,18 +49,27 @@ const Home = () => {
   };
 
   useEffect(() => {
+    const fetchUserId = async () => {
+      const userId = await getUserId();
+      setUserId(userId as string);
+    }
+
+    fetchUserId()
+  })
+  useEffect(() => {
     const fetchRecipes = async () => {
       const recipes = await getAllRecipes();
       setRecipes(recipes);
     };
     fetchRecipes();
   }, []);
-
-  console.log(recipes);
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="">
+      <Header />
+      
       <button onClick={handleAddRecipe}> Adicionar </button>
       <div className="flex gap-12">
+        
         {recipes.map((recipe) => (
           <div key={recipe.id}>
             <h2>{recipe.title}</h2>

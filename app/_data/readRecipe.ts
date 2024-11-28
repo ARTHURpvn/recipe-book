@@ -13,7 +13,6 @@ export const getAllRecipes = async () => {
         },
       });
 
-
       return ingredients;
     })
   );
@@ -39,6 +38,4 @@ export const getAllRecipes = async () => {
 
   console.log(teste[0]["ingredients"]);
   return teste;
-
 };
-
