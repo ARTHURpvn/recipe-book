@@ -1,4 +1,4 @@
-import AddRecipe from "../_components/addRecipe";
+import AddRecipe from "../_components/_form/addRecipe";
 import Header from "../_components/header";
 
 const RecipesPage = () => {

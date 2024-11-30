@@ -13,14 +13,14 @@ import {
   INGREDIENTS_LABELS,
   QUANTITY_TYPE,
   QUANTITY_TYPE_LABELS,
-} from "../_utils/constants";
+} from "../../../_utils/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 
 type InputTypeProps = {
   input: string;
   name: string;
-  field?: any;
+  field: any;
   placeholder: string;
 };
 
@@ -35,7 +35,11 @@ const InputType = ({ input, name, field, placeholder }: InputTypeProps) => {
 
       case "select":
         inputType = (
-          <Select required>
+          <Select
+            onValueChange={(value) => field.onChange(value)}
+            value={field.value}
+            required
+          >
             <SelectTrigger>
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
@@ -62,7 +66,6 @@ const InputType = ({ input, name, field, placeholder }: InputTypeProps) => {
           </Select>
         );
         break;
-
       default:
         inputType = (
           <Input placeholder={placeholder} type={input} {...field} required />

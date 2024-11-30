@@ -41,7 +41,7 @@ const FieldSet = ({
       render={({ field }) => (
         <FormItem>
           <FormLabel className={`${name === 'quantityType' && 'opacity-0'}`}>{label}</FormLabel>
-          <FormControl>
+          <FormControl >
             <InputType
               input={input}
               name={name}
