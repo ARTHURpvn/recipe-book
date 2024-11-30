@@ -22,7 +22,7 @@ export type RecipeProps = {
 };
 
 export const QUANTITY_TYPE = ["UNIT", "LITRE", "CUP", "BAR"];
-export const QUANTITY_TYPE_LABEL: Record<string, string> = {
+export const QUANTITY_TYPE_LABELS: Record<string, string> = {
   [QuantityEnum.UNIT]: "Unidade",
   [QuantityEnum.LITRE]: "Litro",
   [QuantityEnum.CUP]: "Xícara",

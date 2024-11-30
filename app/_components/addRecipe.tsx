@@ -11,28 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import {
   Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  CATEGORIES,
   CATEGORIES_LABELS,
-  INGREDIENTS,
   INGREDIENTS_LABELS,
-  QUANTITY_TYPE,
-  QUANTITY_TYPE_LABEL,
 } from "../_utils/constants";
 import { Button } from "@/components/ui/button";
 import { PenIcon, PlusIcon, X } from "lucide-react";
@@ -41,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { formSchema } from "../_utils/zodConfig";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import FieldSet from "./FieldSet";
 
 const AddRecipe = () => {
   const addedIngredients = [
@@ -57,6 +40,8 @@ const AddRecipe = () => {
   ];
 
   const addedCategories = [{ name: "LUNCH" }, { name: "DESSERT" }];
+
+  console.log("render");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -93,125 +78,54 @@ const AddRecipe = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             <ScrollArea className="flex">
-              <FormField
+              <FieldSet
                 control={form.control}
                 name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nome</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Nome da receita..."
-                        {...field}
-                        required
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Nome"
+                input="text"
+                placeholder="Digite o nome da sua receita..."
               />
 
-              <FormField
+              <FieldSet
                 control={form.control}
                 name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Descrição</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Faça uma descrição da sua receita..."
-                        {...field}
-                        required
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Descrição"
+                input="textArea"
+                placeholder="Digite a descrição da sua receita..."
               />
 
-              <FormField
+              <FieldSet
                 control={form.control}
                 name="serving"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Porções</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Quantidade de porções..."
-                        {...field}
-                        required
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Porções"
+                input="number"
+                placeholder="Quantidade de porções..."
               />
 
               <div className="grid grid-cols-2 gap-3">
-                <FormField
+                <FieldSet
                   control={form.control}
                   name="ingredient"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>Ingredient</FormLabel>
-                      <FormControl>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione um Ingrediente" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {INGREDIENTS.map((ingredient, index) => (
-                              <SelectItem key={index} value={ingredient}>
-                                {INGREDIENTS_LABELS[ingredient]}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Ingrediente"
+                  input="select"
+                  placeholder="Selecione um Ingrediente"
                 />
+
                 <div className="grid grid-cols-4 gap-2">
-                  <FormField
+                  <FieldSet
                     control={form.control}
                     name="quantity"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Quantidade</FormLabel>
-                        <FormControl>
-                          <Input placeholder="1" {...field} required />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="Quantidade"
+                    input="number"
+                    placeholder="1"
                   />
                   <div className="col-span-2">
-                    <FormField
+                    <FieldSet
                       control={form.control}
                       name="quantityType"
-                      render={() => (
-                        <FormItem>
-                          <FormLabel className="opacity-0">Unidade</FormLabel>
-                          <FormControl>
-                            <Select>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Tipo" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {QUANTITY_TYPE.map((quantity, index) => (
-                                  <SelectItem key={index} value={quantity}>
-                                    {QUANTITY_TYPE_LABEL[quantity]}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      label="Unidade"
+                      input="select"
+                      placeholder="Tipo"
                     />
                   </div>
                   <Button type="button" variant={"white"} className="self-end">
@@ -248,88 +162,40 @@ const AddRecipe = () => {
                 </ul>
               </ScrollArea>
 
-              <FormField
+              <FieldSet
                 control={form.control}
                 name="instruction"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Instruções</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="De instruções sobre como fazer sua receita..."
-                        {...field}
-                        required
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Instruções"
+                input="textArea"
+                placeholder="Digite as instruções da sua receita..."
               />
 
               <div className="grid grid-cols-2 gap-3">
-                <FormField
+                <FieldSet
                   control={form.control}
                   name="prepTime"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tempo de Preparo</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Tempo de Preparo..."
-                          {...field}
-                          required
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Tempo de Preparo"
+                  input="number"
+                  placeholder="Tempo de Preparo..."
                 />
-                <FormField
+
+                <FieldSet
                   control={form.control}
                   name="cookTime"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tempo no Fogão</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Tempo no Fogão..."
-                          {...field}
-                          required
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Tempo no Fogão"
+                  input="number"
+                  placeholder="Tempo no Fogão..."
                 />
               </div>
 
               <div className="grid items-end grid-cols-8 gap-3">
                 <div className="col-span-7">
-                  <FormField
+                  <FieldSet
                     control={form.control}
                     name="category"
-                    render={() => (
-                      <FormItem>
-                        <FormLabel>Categoria</FormLabel>
-                        <FormControl>
-                          <Select>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Selecione uma categoria" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {CATEGORIES.map((category, index) => (
-                                <SelectItem key={index} value={category}>
-                                  {CATEGORIES_LABELS[category]}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="Categoria"
+                    input="select"
+                    placeholder="Selecione uma categoria"
                   />
                 </div>
                 <Button variant={"white"}>
@@ -347,18 +213,12 @@ const AddRecipe = () => {
                 ))}
               </div>
 
-              <FormField
+              <FieldSet
                 control={form.control}
                 name="photo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Imagem</FormLabel>
-                    <FormControl>
-                      <Input type="file" accept="image/*" {...field} required />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Foto"
+                input="file"
+                placeholder="Selecione uma foto..."
               />
             </ScrollArea>
 
