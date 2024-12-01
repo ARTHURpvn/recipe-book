@@ -10,7 +10,7 @@ type RecipeProps = {
   prepTime: number;
   cookTime: number;
   instructions: string;
-  photo: string;
+  photo: File | string;
   authorId: string;
   ingredients: {
     quantity: string;

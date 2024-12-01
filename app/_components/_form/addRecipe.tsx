@@ -1,7 +1,7 @@
 "use client";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Control, useForm } from "react-hook-form";
 import { useState } from "react";
 
 import {
@@ -33,13 +33,18 @@ import {
 import { useAuth } from "@clerk/nextjs";
 import { createRecipe } from "@/app/_data/createRecipe";
 import { CategoryEnum, IngredientEnum, QuantityEnum } from "@prisma/client";
+import { uploadImage } from "./_utils/uploadImage";
+import { FormFields } from "./_components/InputType";
 
 const AddRecipe = () => {
-  const {userId} = useAuth();
-
+  const { userId } = useAuth();
 
   const [ingredients, setIngredients] = useState<
-    { ingredient: IngredientEnum; quantity: string; quantity_type: QuantityEnum }[]
+    {
+      ingredient: IngredientEnum;
+      quantity: string;
+      quantity_type: QuantityEnum;
+    }[]
   >([]);
   const [categories, setCategories] = useState<{ name: CategoryEnum }[]>([]);
   const [error, setError] = useState<string>("");
@@ -57,34 +62,43 @@ const AddRecipe = () => {
       prepTime: "",
       cookTime: "",
       category: "",
-      photo: "",
+      photo: undefined,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    if (ingredients.length === 0 || categories.length === 0) {
-      setError(
-        "Por favor, adicione pelo menos um ingrediente e uma categoria antes de salvar."
-      );
-      return;
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      let photoUrl = "";
+
+      const file = values.photo;
+
+      if (file) {
+        photoUrl = await uploadImage(file);
+      }
+
+      const data = {
+        title: values.name,
+        description: values.description,
+        servings: Number(values.serving),
+        prepTime: Number(values.prepTime),
+        cookTime: Number(values.cookTime),
+        instructions: values.instruction,
+        photo: photoUrl,
+        ingredients,
+        categories,
+        authorId: userId as string,
+      };
+
+      console.log("Dados enviados:", data);
+
+      await createRecipe(data);
+
+      setError("");
+      form.reset();
+    } catch (error) {
+      console.error("Erro ao enviar os dados:", error);
+      setError("Erro ao salvar a receita.");
     }
-    const data = {
-      title: values.name,
-      description: values.description,
-      servings: parseInt(values.serving),
-      prepTime: parseInt(values.prepTime),
-      cookTime: parseInt(values.cookTime),
-      instructions: values.instruction,
-      photo: values.photo,
-      authorId: userId as string,
-      ingredients: ingredients,
-      categories: categories,
-    };
-
-    console.log(data);
-    createRecipe(data);
-
-    setError("");
   }
 
   return (
@@ -104,7 +118,7 @@ const AddRecipe = () => {
               <div className="mx-2 space-y-1 w-[95%]">
                 {/* NOME DA RECEITA */}
                 <FieldSet
-                  control={form.control}
+                  control={form.control as Control<FormFields>}
                   name="name"
                   label="Nome"
                   input="text"
@@ -113,7 +127,7 @@ const AddRecipe = () => {
 
                 {/* DESCRICAO DA RECEITA */}
                 <FieldSet
-                  control={form.control}
+                  control={form.control as Control<FormFields>}
                   name="description"
                   label="Descrição"
                   input="textArea"
@@ -122,7 +136,7 @@ const AddRecipe = () => {
 
                 {/* PORÇÕES */}
                 <FieldSet
-                  control={form.control}
+                  control={form.control as Control<FormFields>}
                   name="serving"
                   label="Porções"
                   input="number"
@@ -133,7 +147,7 @@ const AddRecipe = () => {
                 <div className="grid grid-cols-5 gap-3">
                   <div className="col-span-2">
                     <FieldSet
-                      control={form.control}
+                      control={form.control as Control<FormFields>}
                       name="ingredient"
                       label="Ingrediente"
                       input="select"
@@ -145,7 +159,7 @@ const AddRecipe = () => {
                     {/* QUANTIDADE DO INGREDIENTE */}
                     <div className="col-span-2">
                       <FieldSet
-                        control={form.control}
+                        control={form.control as Control<FormFields>}
                         name="quantity"
                         label="Quantidade"
                         input="number"
@@ -155,7 +169,7 @@ const AddRecipe = () => {
                     <div className="col-span-3">
                       {/* TIPO DE QUANTIDADE DO INGREDIENTE */}
                       <FieldSet
-                        control={form.control}
+                        control={form.control as Control<FormFields>}
                         name="quantityType"
                         label="Unidade"
                         input="select"
@@ -170,9 +184,13 @@ const AddRecipe = () => {
                       className="self-end"
                       onClick={() => {
                         const array = {
-                          ingredient: form.getValues("ingredient") as IngredientEnum,
+                          ingredient: form.getValues(
+                            "ingredient"
+                          ) as IngredientEnum,
                           quantity: String(form.getValues("quantity")),
-                          quantity_type: form.getValues("quantityType") as QuantityEnum,
+                          quantity_type: form.getValues(
+                            "quantityType"
+                          ) as QuantityEnum,
                         };
                         handleAddIngredient(
                           ingredients,
@@ -229,7 +247,7 @@ const AddRecipe = () => {
                 )}
 
                 <FieldSet
-                  control={form.control}
+                  control={form.control as Control<FormFields>}
                   name="instruction"
                   label="Instruções"
                   input="textArea"
@@ -238,7 +256,7 @@ const AddRecipe = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <FieldSet
-                    control={form.control}
+                    control={form.control as Control<FormFields>}
                     name="prepTime"
                     label="Tempo de Preparo"
                     input="number"
@@ -246,7 +264,7 @@ const AddRecipe = () => {
                   />
 
                   <FieldSet
-                    control={form.control}
+                    control={form.control as Control<FormFields>}
                     name="cookTime"
                     label="Tempo no Fogão"
                     input="number"
@@ -257,7 +275,7 @@ const AddRecipe = () => {
                 <div className="grid items-end grid-cols-8 gap-3">
                   <div className="col-span-7">
                     <FieldSet
-                      control={form.control}
+                      control={form.control as Control<FormFields>}
                       name="category"
                       label="Categoria"
                       input="select"
@@ -305,7 +323,7 @@ const AddRecipe = () => {
                 </div>
 
                 <FieldSet
-                  control={form.control}
+                  control={form.control as Control<FormFields>}
                   name="photo"
                   label="Foto"
                   input="file"

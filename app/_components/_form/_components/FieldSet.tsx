@@ -7,37 +7,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import InputType from "./InputType";
+import InputType, { FormFields } from "./InputType";
 import { Control } from "react-hook-form";
 type FieldSetProps = {
-  name:
-    | "name"
-    | "description"
-    | "serving"
-    | "ingredient"
-    | "quantity"
-    | "quantityType"
-    | "instruction"
-    | "prepTime"
-    | "cookTime"
-    | "category"
-    | "photo";
+  name: keyof FormFields;
   label: string;
   input: string;
   placeholder: string;
-  control: Control<{
-    name: string;
-    ingredient: string;
-    category: string;
-    quantityType: string;
-    description: string;
-    serving: string;
-    quantity: string;
-    instruction: string;
-    prepTime: string;
-    cookTime: string;
-    photo: string;
-  }>;
+  control: Control<FormFields>;
 };
 
 const FieldSet = ({
