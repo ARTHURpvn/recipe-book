@@ -17,6 +17,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { ControllerRenderProps } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 
 type FormFields = {
   name: string;
@@ -45,7 +46,7 @@ const InputType = ({ input, name, field, placeholder }: InputTypeProps) => {
 
     switch (input) {
       case "textArea":
-        inputType = <Textarea placeholder={placeholder} {...field} required />;
+        inputType = <Textarea placeholder={placeholder}  {...field} className="max-h-[15rem]" required />;
         break;
 
       case "select":
@@ -80,6 +81,34 @@ const InputType = ({ input, name, field, placeholder }: InputTypeProps) => {
           </Select>
         );
         break;
+
+      case "file":
+        inputType = (
+          <div className="flex items-center gap-2 file-input-wrapper">
+            <Button variant={"white"} asChild>
+              <label htmlFor="file-upload">Escolher arquivo</label>
+            </Button>
+            <Input
+              id="file-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  field.onChange(e.target.files[0].name);
+                  console.log(e.target.files[0]);
+                }
+              }}
+            />
+            {field.value && (
+              <p className="text-sm w-full border rounded-md p-[.55rem]">
+                {field.value || "Nenhum arquivo selecionado"}
+              </p>
+            )}
+          </div>
+        );
+        break;
+
       default:
         inputType = (
           <Input placeholder={placeholder} type={input} {...field} required />

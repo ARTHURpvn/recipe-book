@@ -19,7 +19,7 @@ import {
   QUANTITY_TYPE_LABELS,
 } from "../../_utils/constants";
 import { Button } from "@/components/ui/button";
-import { PenIcon, PlusIcon, X } from "lucide-react";
+import { PlusIcon, X } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { formSchema } from "./_utils/zodConfig";
@@ -28,13 +28,21 @@ import {
   handleAddCategory,
   handleAddIngredient,
   handleDeleteCategory,
+  handleDeleteIngredient,
 } from "@/app/_components/_form/_utils/handleClicks";
+import { useAuth } from "@clerk/nextjs";
+import { createRecipe } from "@/app/_data/createRecipe";
+import { CategoryEnum, IngredientEnum, QuantityEnum } from "@prisma/client";
 
 const AddRecipe = () => {
+  const {userId} = useAuth();
+
+
   const [ingredients, setIngredients] = useState<
-    { ingredient: string; quantity: string; quantity_type: string }[]
+    { ingredient: IngredientEnum; quantity: string; quantity_type: QuantityEnum }[]
   >([]);
-  const [categories, setCategories] = useState<{ name: string }[]>([]);
+  const [categories, setCategories] = useState<{ name: CategoryEnum }[]>([]);
+  const [error, setError] = useState<string>("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,20 +62,29 @@ const AddRecipe = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    if (ingredients.length === 0 || categories.length === 0) {
+      setError(
+        "Por favor, adicione pelo menos um ingrediente e uma categoria antes de salvar."
+      );
+      return;
+    }
     const data = {
       title: values.name,
       description: values.description,
-      servings: values.serving,
-      prepTime: values.prepTime,
-      cookTime: values.cookTime,
+      servings: parseInt(values.serving),
+      prepTime: parseInt(values.prepTime),
+      cookTime: parseInt(values.cookTime),
       instructions: values.instruction,
       photo: values.photo,
-      authorId: "user-123",
+      authorId: userId as string,
       ingredients: ingredients,
       categories: categories,
     };
 
     console.log(data);
+    createRecipe(data);
+
+    setError("");
   }
 
   return (
@@ -83,8 +100,9 @@ const AddRecipe = () => {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-            <ScrollArea className="h-[45rem]">
+            <ScrollArea className="h-[48rem]">
               <div className="mx-2 space-y-1 w-[95%]">
+                {/* NOME DA RECEITA */}
                 <FieldSet
                   control={form.control}
                   name="name"
@@ -93,6 +111,7 @@ const AddRecipe = () => {
                   placeholder="Digite o nome da sua receita..."
                 />
 
+                {/* DESCRICAO DA RECEITA */}
                 <FieldSet
                   control={form.control}
                   name="description"
@@ -101,6 +120,7 @@ const AddRecipe = () => {
                   placeholder="Digite a descrição da sua receita..."
                 />
 
+                {/* PORÇÕES */}
                 <FieldSet
                   control={form.control}
                   name="serving"
@@ -109,24 +129,31 @@ const AddRecipe = () => {
                   placeholder="Quantidade de porções..."
                 />
 
-                <div className="grid grid-cols-2 gap-3">
-                  <FieldSet
-                    control={form.control}
-                    name="ingredient"
-                    label="Ingrediente"
-                    input="select"
-                    placeholder="Selecione um Ingrediente"
-                  />
-
-                  <div className="grid grid-cols-4 gap-2">
+                {/* INGREDIENTES */}
+                <div className="grid grid-cols-5 gap-3">
+                  <div className="col-span-2">
                     <FieldSet
                       control={form.control}
-                      name="quantity"
-                      label="Quantidade"
-                      input="number"
-                      placeholder="1"
+                      name="ingredient"
+                      label="Ingrediente"
+                      input="select"
+                      placeholder="Ingrediente"
                     />
+                  </div>
+
+                  <div className="col-span-3 grid grid-cols-6 gap-2">
+                    {/* QUANTIDADE DO INGREDIENTE */}
                     <div className="col-span-2">
+                      <FieldSet
+                        control={form.control}
+                        name="quantity"
+                        label="Quantidade"
+                        input="number"
+                        placeholder="1"
+                      />
+                    </div>
+                    <div className="col-span-3">
+                      {/* TIPO DE QUANTIDADE DO INGREDIENTE */}
                       <FieldSet
                         control={form.control}
                         name="quantityType"
@@ -135,20 +162,24 @@ const AddRecipe = () => {
                         placeholder="Tipo"
                       />
                     </div>
+
+                    {/* ADICIONAR INGREDIENTE */}
                     <Button
                       type="button"
                       variant={"white"}
                       className="self-end"
                       onClick={() => {
-                        const ingredient = form.getValues("ingredient");
-                        const quantity = form.getValues("quantity");
-                        const quantityType = form.getValues("quantityType");
                         const array = {
-                          ingredient: ingredient,
-                          quantity: String(quantity),
-                          quantity_type: quantityType,
+                          ingredient: form.getValues("ingredient") as IngredientEnum,
+                          quantity: String(form.getValues("quantity")),
+                          quantity_type: form.getValues("quantityType") as QuantityEnum,
                         };
-                        handleAddIngredient(ingredients, setIngredients, array);
+                        handleAddIngredient(
+                          ingredients,
+                          setIngredients,
+                          array,
+                          setError
+                        );
                       }}
                     >
                       <PlusIcon />
@@ -156,35 +187,46 @@ const AddRecipe = () => {
                   </div>
                 </div>
 
-                <ScrollArea className="h-24 border rounded-md">
-                  <ul className=" px-4 pt-2 divide-y space-y-2">
-                    {ingredients.map((ingredient, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center pt-2 justify-between"
-                      >
-                        <div className="flex gap-2">
-                          <p>{ingredient.quantity}</p>
-                          <p>
-                            {QUANTITY_TYPE_LABELS[ingredient.quantity_type]}
-                          </p>
-                          <p>de</p>
-                          <p>{INGREDIENTS_LABELS[ingredient.ingredient]}</p>
-                        </div>
+                {/* LISTA DE INGREDIENTES */}
+                {ingredients.length >= 1 && (
+                  <ScrollArea className="resize-y max-h-[10rem]  min-h-24 border rounded-md">
+                    <ul className=" px-4 pt-2 divide-y space-y-2">
+                      {ingredients.map((ingredient, index) => (
+                        <li
+                          key={index}
+                          className="flex items-center pt-2 justify-between"
+                        >
+                          <div className="flex gap-2">
+                            <p>{ingredient.quantity}</p>
+                            <p>
+                              {QUANTITY_TYPE_LABELS[ingredient.quantity_type]}
+                            </p>
+                            <p>de</p>
+                            <p>{INGREDIENTS_LABELS[ingredient.ingredient]}</p>
+                          </div>
 
-                        <div className="flex items-center gap-2 justify-center">
-                          <Button type="button" variant={"white"} size={"sm"}>
-                            <PenIcon />
-                          </Button>
-
-                          <Button type="button" variant={"ghost"} size={"sm"}>
-                            <X />
-                          </Button>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </ScrollArea>
+                          <div className="flex items-center gap-2 justify-center">
+                            {/* BOTAO EXCLUIR */}
+                            <Button
+                              type="button"
+                              variant={"white"}
+                              size={"sm"}
+                              onClick={() =>
+                                handleDeleteIngredient(
+                                  ingredients,
+                                  setIngredients,
+                                  ingredient
+                                )
+                              }
+                            >
+                              <X />
+                            </Button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </ScrollArea>
+                )}
 
                 <FieldSet
                   control={form.control}
@@ -229,7 +271,8 @@ const AddRecipe = () => {
                       handleAddCategory(
                         categories,
                         setCategories,
-                        form.getValues("category")
+                        form.getValues("category") as CategoryEnum,
+                        setError
                       );
                     }}
                   >
@@ -240,12 +283,12 @@ const AddRecipe = () => {
                   {categories.map((category, index) => (
                     <Badge
                       key={index}
-                      className="bg-white text-black gap-2 py-2"
+                      className="bg-white/70 text-black gap-2 py-2"
                     >
                       {CATEGORIES_LABELS[category.name]}
                       <Button
                         type="button"
-                        variant={"white"}
+                        variant={"ghost"}
                         className="w-4 h-4"
                         onClick={() => {
                           handleDeleteCategory(
@@ -271,12 +314,15 @@ const AddRecipe = () => {
               </div>
             </ScrollArea>
 
+            {/* Exibir erros */}
+            {error && <p className="text-red-500">{error}</p>}
+
             <div className="flex gap-2 justify-end">
               <DialogClose asChild>
                 <Button
                   variant={"outline"}
                   type="button"
-                  onClick={() => form.reset}
+                  onClick={() => form.reset()}
                 >
                   Cancelar
                 </Button>

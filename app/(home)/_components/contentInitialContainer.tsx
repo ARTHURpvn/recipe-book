@@ -107,7 +107,7 @@ const ContentInitialContainer = () => {
 
                   <div className="w-1/2 h-[65vh]">
                     <Image
-                      src={recipe.photo}
+                      src={"/"+recipe.photo}
                       alt="Logo"
                       width={900}
                       height={900}
