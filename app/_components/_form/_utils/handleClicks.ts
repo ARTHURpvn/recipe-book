@@ -19,11 +19,11 @@ export const handleDeleteCategory = (
 };
 
 export const handleAddIngredient = (
-  ingredients: { name: string; quantity: number; quantity_type: string }[],
+  ingredients: { ingredient: string; quantity: string; quantity_type: string }[],
   setIngredients: Dispatch<
-    SetStateAction<{ name: string; quantity: number; quantity_type: string }[]>
+    SetStateAction<{ ingredient: string; quantity: string; quantity_type: string }[]>
   >,
-  ingredient: { name: string; quantity: number; quantity_type: string }
+  ingredient: { ingredient: string; quantity: string; quantity_type: string }
 ) => {
   setIngredients([...ingredients, ingredient]);
 };

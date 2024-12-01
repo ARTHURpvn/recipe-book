@@ -1,5 +1,8 @@
 "use client";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 import {
   Dialog,
@@ -10,25 +13,26 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { CATEGORIES_LABELS, INGREDIENTS_LABELS } from "../../_utils/constants";
+import {
+  CATEGORIES_LABELS,
+  INGREDIENTS_LABELS,
+  QUANTITY_TYPE_LABELS,
+} from "../../_utils/constants";
 import { Button } from "@/components/ui/button";
 import { PenIcon, PlusIcon, X } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { formSchema } from "../../_utils/zodConfig";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { formSchema } from "./_utils/zodConfig";
 import FieldSet from "./_components/FieldSet";
-import { useState } from "react";
 import {
   handleAddCategory,
   handleAddIngredient,
   handleDeleteCategory,
-} from "@/app/_utils/handleClicks";
+} from "@/app/_components/_form/_utils/handleClicks";
 
 const AddRecipe = () => {
   const [ingredients, setIngredients] = useState<
-    { name: string; quantity: number; quantity_type: string }[]
+    { ingredient: string; quantity: string; quantity_type: string }[]
   >([]);
   const [categories, setCategories] = useState<{ name: string }[]>([]);
 
@@ -37,20 +41,33 @@ const AddRecipe = () => {
     defaultValues: {
       name: "",
       description: "",
-      serving: 1,
+      serving: "",
       ingredient: "",
-      quantity: 1,
+      quantity: "",
       quantityType: "",
       instruction: "",
-      prepTime: 5,
-      cookTime: 5,
+      prepTime: "",
+      cookTime: "",
       category: "",
       photo: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    const data = {
+      title: values.name,
+      description: values.description,
+      servings: values.serving,
+      prepTime: values.prepTime,
+      cookTime: values.cookTime,
+      instructions: values.instruction,
+      photo: values.photo,
+      authorId: "user-123",
+      ingredients: ingredients,
+      categories: categories,
+    };
+
+    console.log(data);
   }
 
   return (
@@ -123,12 +140,12 @@ const AddRecipe = () => {
                       variant={"white"}
                       className="self-end"
                       onClick={() => {
-                        const name = form.getValues("ingredient");
+                        const ingredient = form.getValues("ingredient");
                         const quantity = form.getValues("quantity");
                         const quantityType = form.getValues("quantityType");
                         const array = {
-                          name: name,
-                          quantity: quantity,
+                          ingredient: ingredient,
+                          quantity: String(quantity),
                           quantity_type: quantityType,
                         };
                         handleAddIngredient(ingredients, setIngredients, array);
@@ -148,9 +165,11 @@ const AddRecipe = () => {
                       >
                         <div className="flex gap-2">
                           <p>{ingredient.quantity}</p>
-                          <p>{ingredient.quantity_type}</p>
+                          <p>
+                            {QUANTITY_TYPE_LABELS[ingredient.quantity_type]}
+                          </p>
                           <p>de</p>
-                          <p>{INGREDIENTS_LABELS[ingredient.name]}</p>
+                          <p>{INGREDIENTS_LABELS[ingredient.ingredient]}</p>
                         </div>
 
                         <div className="flex items-center gap-2 justify-center">

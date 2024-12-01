@@ -16,12 +16,27 @@ import {
 } from "../../../_utils/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { ControllerRenderProps } from "react-hook-form";
+
+type FormFields = {
+  name: string;
+  ingredient: string;
+  category: string;
+  quantityType: string;
+  description: string;
+  serving: string;
+  quantity: string;
+  instruction: string;
+  prepTime: string;
+  cookTime: string;
+  photo: string;
+};
 
 type InputTypeProps = {
   input: string;
-  name: string;
-  field: any;
+  name: keyof FormFields;
   placeholder: string;
+  field: ControllerRenderProps<FormFields, keyof FormFields>;
 };
 
 const InputType = ({ input, name, field, placeholder }: InputTypeProps) => {
@@ -38,7 +53,6 @@ const InputType = ({ input, name, field, placeholder }: InputTypeProps) => {
           <Select
             onValueChange={(value) => field.onChange(value)}
             value={field.value}
-            required
           >
             <SelectTrigger>
               <SelectValue placeholder={placeholder} />

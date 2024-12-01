@@ -5,22 +5,21 @@ import InitialContainer from "./_components/initialContainer";
 const Home = () => {
   // const handleAddRecipe = async () => {
   //   await createRecipe({
-  //     title: "Bolo de Leitinho",
-  //     description: "Um delicioso leitinho.",
-  //     servings: 1,
-  //     prepTime: 20,
-  //     cookTime: 40,
-  //     instructions: "Misture os ingredientes e leve ao forno por 40 minutos.",
-  //     photo: "https://example.com/bolo.jpg",
   //     authorId: "user-123",
+  //     categories: [{ name: "LUNCH" }],
+  //     cookTime: 40,
+  //     description: "Um delicioso leitinho.",
   //     ingredients: [
   //       { ingredient: "FLUOR", quantity: "100", quantity_type: "CUP" },
   //       { ingredient: "MILK", quantity: "1", quantity_type: "LITRE" },
   //     ],
-  //     categories: [{ name: "LUNCH" }],
+  //     instructions: "Misture os ingredientes e leve ao forno por 40 minutos.",
+  //     photo: "https://example.com/bolo.jpg",
+  //     prepTime: 20,
+  //     servings: 1,
+  //     title: "Bolo de Leitinho",
   //   });
   // };
-
 
   return (
     <div className="">

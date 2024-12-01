@@ -8,21 +8,21 @@ export const formSchema = z.object({
     description: z.string().min(15, {
       message: "A descrição da receita deve contem pelo menos 15 caracteres.",
     }),
-    serving: z.number().min(1, {
+    serving: z.string().min(1, {
       message: "O numero de porção deve ser maior que 0.",
     }),
     ingredient: z.string(),
-    quantity: z.number().min(1, {
+    quantity: z.string().min(1, {
       message: "A quantidade deve ser maior que 0.",
     }),
     quantityType: z.string(),
     instruction: z.string().min(30, {
       message: "A descrição da receita deve contem pelo menos 30 caracteres.",
     }),
-    prepTime: z.number().min(5, {
+    prepTime: z.string().min(1, {
       message: "O tempo de preparo deve ser maior que 4 minutos",
     }),
-    cookTime: z.number().min(5, {
+    cookTime: z.string().min(1, {
       message: "O tempo no fogão deve ser maior que 4 minutos",
     }),
     category: z.string(),
