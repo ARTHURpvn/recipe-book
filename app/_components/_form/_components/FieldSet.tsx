@@ -8,13 +8,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import InputType, { FormFields } from "./InputType";
-import { Control } from "react-hook-form";
+import { Control, UseFormReturn } from "react-hook-form";
+import { formField } from "../addRecipe";
+
+
 type FieldSetProps = {
   name: keyof FormFields;
   label: string;
   input: string;
   placeholder: string;
   control: Control<FormFields>;
+  form: UseFormReturn<formField>;
 };
 
 const FieldSet = ({
@@ -23,6 +27,7 @@ const FieldSet = ({
   input,
   placeholder,
   control,
+  form
 }: FieldSetProps) => {
   return (
     <FormField
@@ -39,6 +44,7 @@ const FieldSet = ({
               name={name}
               field={field}
               placeholder={placeholder}
+              form={form}
             />
           </FormControl>
           <FormMessage />

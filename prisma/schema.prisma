@@ -28,25 +28,25 @@ model Recipe {
 model Ingredient {
   id      Int                @id @default(autoincrement())
   name    IngredientEnum     @unique
-  recipes RecipeIngredient[] // Relacionamento com tabela intermediária
+  recipes RecipeIngredient[]
 
   @@map("ingredients")
 }
 
 model Category {
   id      Int              @id @default(autoincrement())
-  name    CategoryEnum     @unique // Cada categoria é única no sistema
-  recipes RecipeCategory[] // Relacionamento com tabela intermediária
+  name    CategoryEnum     @unique 
+  recipes RecipeCategory[]
 
   @@map("categories")
 }
 
 model RecipeIngredient {
   id            Int          @id @default(autoincrement())
-  recipeId      Int // Relacionamento com Recipe
-  ingredientId  Int // Relacionamento com Ingredient
-  quantity      String // Quantidade específica para a receita
-  quantity_type QuantityEnum // Unidade de medida específica para a receita
+  recipeId      Int 
+  ingredientId  Int 
+  quantity      String 
+  quantity_type QuantityEnum 
   recipe        Recipe       @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   ingredient    Ingredient   @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
 
@@ -66,31 +66,100 @@ model RecipeCategory {
 }
 
 enum IngredientEnum {
+  CORNSTARCH
+  WHEAT_FLOUR
+  REFINED_SUGAR
+  SWEET_CORN
   SUGAR
-  FLUOR
-  MILK
+  ROYAL_BAKING_POWDER
   EGG
   BUTTER
+  BEER
   SALT
-  CHOCOLATE
-  CREAM
-  CHOCOLATE_POWDER
+  MILK
+  PLUM
+  RAISINS
+  CINNAMON
+  GROUND_CINNAMON
+  UNREFINED_SUGAR
+  WATER
+  CORNMEAL
+  CARROT
   OIL
+  CHOCOLATE
+  SEMI_SWEET_CHOCOLATE
+  SPRINKLES
+  COFFEE
+  JELLY
+  HONEY
+  EGG_YOLK
+  EGG_WHITE
+  LIQUOR
+  MARGARINE
+  COCONUT_MILK
+  COCONUT_FLOUR
+  COCONUT
+  SOCOCO
+  HOMINY_CORNMEAL
+  CHEESE
+  GRATED_CHEESE
+  MINAS_CHEESE
+  BAKING_SODA
+  FAT
+  YOGURT
+  CLOVES
+  ORANGE_JUICE
+  CONDENSED_MILK
+  BUTTER_MILK
+  CASSAVA
+  HEAVY_CREAM
+  TAPIOCA_FLOUR
+  SWEET_TAPIOCA_FLOUR
+  SOUR_TAPIOCA_FLOUR
   MILK_CREAM
-  FERMENT
+  FENNEL
+  SAFFRON
+  BLACK_PEPPER
+  SOY_SAUCE
+  FRESH_GINGER
+  RICE_VINEGAR
+  NUTMEG
+  TURMERIC
+  PAPRIKA
+  GARLIC
+  ONION
+  TOMATO
+  BAT_LEAF
+  PARSLEY
+  CILANTRO
+  OLIVE_OIL
 }
 
 enum QuantityEnum {
+  GRAMS
+  KILOGRAMS
+  MILLILITERS
+  LITERS
+  TABLESPOON
+  TEASPOON
   CUP
+  GLASS
+  PINCH
   UNIT
-  LITRE
-  SOUP_SPOON
-  BOX
-  BAR
+  PIECE
+  SLICE
+  CAN
 }
 
 enum CategoryEnum {
-  LUNCH
+  GRAINS
+  DAIRY
+  MEATS
+  OILS_FATS
+  VEGETABLES
+  FRUITS
+  PASTA
+  BREADS
+  LEGUMES
   DESSERT
-  DINNER
 }

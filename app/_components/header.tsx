@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { getUserId } from "../_utils/getUserId";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
+  const pathname = usePathname();
   const [userId, setUserId] = useState<string>("");
   useEffect(() => {
     const fetchUserId = async () => {
@@ -20,9 +22,9 @@ const Header = () => {
       <div className="flex gap-12 items-center justify-center">
         <Image src="/logo.svg" alt="Logo" width={30} height={30} />
         <nav className="flex gap-4">
-          <Link href="/"> Inicio </Link>
-          <Link href="/recipes"> Receitas</Link>
-          <Link href="/"> Minhas Receitas</Link>
+          <Link href="/" className={pathname === "/" ? "font-bold text-primary" : ""}> Inicio </Link>
+          <Link href="/recipes" className={pathname === "/recipes" ? "font-bold text-primary" : ""}> Receitas</Link>
+          <Link href="/" className={pathname === "/myrecipes" ? "font-bold text-primary" : ""}> Minhas Receitas</Link>
         </nav>
       </div>
       {!userId ? (

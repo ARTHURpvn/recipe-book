@@ -32,7 +32,7 @@ export const createRecipe = async (data: RecipeProps) => {
       prepTime: data.prepTime,
       cookTime: data.cookTime,
       instructions: data.instructions,
-      photo: data.photo,
+      photo: data.photo as string,
       authorId: data.authorId,
     },
   });

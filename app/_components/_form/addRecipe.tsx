@@ -36,6 +36,8 @@ import { CategoryEnum, IngredientEnum, QuantityEnum } from "@prisma/client";
 import { uploadImage } from "./_utils/uploadImage";
 import { FormFields } from "./_components/InputType";
 
+export type formField = z.infer<typeof formSchema>;
+
 const AddRecipe = () => {
   const { userId } = useAuth();
 
@@ -49,7 +51,7 @@ const AddRecipe = () => {
   const [categories, setCategories] = useState<{ name: CategoryEnum }[]>([]);
   const [error, setError] = useState<string>("");
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<formField>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -65,6 +67,7 @@ const AddRecipe = () => {
       photo: undefined,
     },
   });
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -94,7 +97,10 @@ const AddRecipe = () => {
       await createRecipe(data);
 
       setError("");
+      setCategories([]);
+      setIngredients([]);
       form.reset();
+
     } catch (error) {
       console.error("Erro ao enviar os dados:", error);
       setError("Erro ao salvar a receita.");
@@ -103,7 +109,7 @@ const AddRecipe = () => {
 
   return (
     <Dialog>
-      <DialogTrigger className="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-lg">
+      <DialogTrigger className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-full text-lg font-semibold">
         Adicionar Receita
       </DialogTrigger>
       <DialogContent>
@@ -123,6 +129,7 @@ const AddRecipe = () => {
                   label="Nome"
                   input="text"
                   placeholder="Digite o nome da sua receita..."
+                  form={form}
                 />
 
                 {/* DESCRICAO DA RECEITA */}
@@ -132,6 +139,7 @@ const AddRecipe = () => {
                   label="Descrição"
                   input="textArea"
                   placeholder="Digite a descrição da sua receita..."
+                  form={form}
                 />
 
                 {/* PORÇÕES */}
@@ -141,6 +149,7 @@ const AddRecipe = () => {
                   label="Porções"
                   input="number"
                   placeholder="Quantidade de porções..."
+                  form={form}
                 />
 
                 {/* INGREDIENTES */}
@@ -152,6 +161,7 @@ const AddRecipe = () => {
                       label="Ingrediente"
                       input="select"
                       placeholder="Ingrediente"
+                      form={form}
                     />
                   </div>
 
@@ -164,6 +174,7 @@ const AddRecipe = () => {
                         label="Quantidade"
                         input="number"
                         placeholder="1"
+                        form={form}
                       />
                     </div>
                     <div className="col-span-3">
@@ -174,6 +185,7 @@ const AddRecipe = () => {
                         label="Unidade"
                         input="select"
                         placeholder="Tipo"
+                        form={form}
                       />
                     </div>
 
@@ -252,6 +264,7 @@ const AddRecipe = () => {
                   label="Instruções"
                   input="textArea"
                   placeholder="Digite as instruções da sua receita..."
+                  form={form}
                 />
 
                 <div className="grid grid-cols-2 gap-3">
@@ -261,6 +274,7 @@ const AddRecipe = () => {
                     label="Tempo de Preparo"
                     input="number"
                     placeholder="Tempo de Preparo..."
+                    form={form}
                   />
 
                   <FieldSet
@@ -269,6 +283,7 @@ const AddRecipe = () => {
                     label="Tempo no Fogão"
                     input="number"
                     placeholder="Tempo no Fogão..."
+                    form={form}
                   />
                 </div>
 
@@ -280,6 +295,7 @@ const AddRecipe = () => {
                       label="Categoria"
                       input="select"
                       placeholder="Selecione uma categoria"
+                      form={form}
                     />
                   </div>
                   <Button
@@ -328,6 +344,7 @@ const AddRecipe = () => {
                   label="Foto"
                   input="file"
                   placeholder="Selecione uma foto..."
+                  form={form}
                 />
               </div>
             </ScrollArea>

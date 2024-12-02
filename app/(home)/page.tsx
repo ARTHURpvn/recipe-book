@@ -24,7 +24,9 @@ const Home = () => {
   return (
     <div className="">
       <Header />
-      <InitialContainer />
+      <div className="flex justify-center overflow-hidden mt-20">
+        <InitialContainer />
+      </div>
       <div className="flex gap-12"></div>
     </div>
   );
