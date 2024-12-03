@@ -19,10 +19,12 @@ import { Button } from "@/components/ui/button";
 
 const InitialContainer = () => {
   const [recipes, setRecipes] = useState<Array<RecipeProps>>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecipes = async () => {
       const recipes = await getAllRecipes();
+      setIsLoading(false);
       setRecipes(recipes);
     };
     fetchRecipes();
@@ -30,6 +32,12 @@ const InitialContainer = () => {
 
   return (
     <div className={`relative flex justify-center w-[80%] font-geist-sans`}>
+      {isLoading ? (
+        <>
+        
+        </>
+      ) : (
+
       <Carousel className=" w-full" plugins={[Autoplay({ delay: 10000 })]}>
         <CarouselPrevious />
         <CarouselContent>
@@ -107,6 +115,7 @@ const InitialContainer = () => {
         </CarouselContent>
         <CarouselNext />
       </Carousel>
+      )}
     </div>
   );
 };

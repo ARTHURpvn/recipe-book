@@ -2,7 +2,7 @@
 import { SignUpButton, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import { getUserId } from "../_utils/getUserId";
+import { getUserId } from "../_utils/getuserId";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -17,6 +17,7 @@ const Header = () => {
 
     fetchUserId();
   });
+
   return (
     <header className="flex w-full py-4 px-6 border-b-[1px] justify-between">
       <div className="flex gap-12 items-center justify-center">

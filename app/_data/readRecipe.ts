@@ -4,7 +4,6 @@ import { db } from "../_lib/prisma";
 
 export const getAllRecipes = async () => {
   const recipes = await db.recipe.findMany();
-
   const ingredients = await Promise.all(
     recipes.map(async (recipe) => {
       const ingredients = await db.recipeIngredient.findMany({
@@ -36,6 +35,19 @@ export const getAllRecipes = async () => {
     };
   });
 
-  console.log(teste[0]["ingredients"]);
   return teste;
+};
+
+export const getRecipeById = async (id: number) => {
+  const recipe = await db.recipe.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      ingredients: true,
+      categories: true,
+    },
+  })
+
+  return recipe
 };

@@ -19,6 +19,7 @@ export type RecipeProps = {
     id: number;
     categoryId: number;
   }>;
+  createdAt?: Date;
 };
 
 export const QUANTITY_TYPE = [
