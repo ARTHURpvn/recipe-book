@@ -18,7 +18,9 @@ import { PlayIcon, TimerIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const InitialContainer = () => {
-  const [recipes, setRecipes] = useState<Array<RecipeProps>>([]);
+  const [recipes, setRecipes] = useState<Array<RecipeProps>>(
+    JSON.parse(localStorage.getItem("recipes") as string),
+  );
 
   useEffect(() => {
     const fetchRecipes = async () => {

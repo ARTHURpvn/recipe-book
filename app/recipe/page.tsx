@@ -24,7 +24,6 @@ const Recipe = () => {
   const [userImage, setUserImage] = useState<string>("");
   const recipeId = useSearchParams();
 
-
   useEffect(() => {
     const fetchRecipe = async () => {
       const recipe = await getRecipeById(Number(recipeId?.get("id")));
@@ -88,7 +87,10 @@ const Recipe = () => {
                 <Separator />
                 <div className="flex gap-2 items-center">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={userImage || "/leclerc.jpg"} alt="@shadcn" />
+                    <AvatarImage
+                      src={userImage || "/leclerc.jpg"}
+                      alt="@shadcn"
+                    />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <p className="text-sm"> Por {userName} </p>

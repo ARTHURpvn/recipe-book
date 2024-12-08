@@ -61,94 +61,96 @@ const FilterContainer = () => {
   }, [ingredientSelected, categorySelected]);
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="white" className="rounded-full" size={"icon"}>
-          <FilterIcon />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[34rem] mr-6 mt-2 flex flex-col gap-6">
-        <div className="flex flex-col">
-          <p className="font-semibold"> Ingredientes </p>
-          <div
-            className={`flex flex-wrap gap-2 ${moreIngredients ? "" : "h-[7.5rem]"} overflow-hidden`}
-          >
-            {INGREDIENTS.map((ingredient) => (
-              <button
-                key={ingredient}
-                onClick={() => {
-                  handleFilter({
-                    type: "ingredient",
-                    value: ingredient,
-                  });
-                }}
-              >
-                {ingredientSelected.includes(ingredient) ? (
-                  <Badge key={ingredient} className="bg-opacity-5">
-                    {INGREDIENTS_LABELS[ingredient]}
-                  </Badge>
-                ) : (
-                  <Badge key={ingredient} variant={"secondary"}>
-                    {INGREDIENTS_LABELS[ingredient]}
-                  </Badge>
-                )}
-              </button>
-            ))}
+    <div className="flex flex-col gap-4">
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="white" className="rounded-full" size={"icon"}>
+            <FilterIcon />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[34rem] mr-6 mt-2 flex flex-col gap-6">
+          <div className="flex flex-col">
+            <p className="font-semibold"> Ingredientes </p>
+            <div
+              className={`flex flex-wrap gap-2 ${moreIngredients ? "" : "h-[7.5rem]"} overflow-hidden`}
+            >
+              {INGREDIENTS.map((ingredient) => (
+                <button
+                  key={ingredient}
+                  onClick={() => {
+                    handleFilter({
+                      type: "ingredient",
+                      value: ingredient,
+                    });
+                  }}
+                >
+                  {ingredientSelected.includes(ingredient) ? (
+                    <Badge key={ingredient} className="bg-opacity-5">
+                      {INGREDIENTS_LABELS[ingredient]}
+                    </Badge>
+                  ) : (
+                    <Badge key={ingredient} variant={"secondary"}>
+                      {INGREDIENTS_LABELS[ingredient]}
+                    </Badge>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex justify-end">
+              {moreIngredients ? (
+                <Button
+                  variant={"link"}
+                  onClick={() => {
+                    setMoreIngredients(false);
+                  }}
+                >
+                  Ocultar
+                </Button>
+              ) : (
+                <Button
+                  variant={"link"}
+                  onClick={() => {
+                    setMoreIngredients(true);
+                  }}
+                >
+                  Ver mais
+                </Button>
+              )}
+            </div>
           </div>
 
-          <div className="flex justify-end">
-            {moreIngredients ? (
-              <Button
-                variant={"link"}
-                onClick={() => {
-                  setMoreIngredients(false);
-                }}
-              >
-                Ocultar
-              </Button>
-            ) : (
-              <Button
-                variant={"link"}
-                onClick={() => {
-                  setMoreIngredients(true);
-                }}
-              >
-                Ver mais
-              </Button>
-            )}
-          </div>
-        </div>
+          <Separator />
 
-        <Separator />
-
-        <div className="flex flex-col gap-2">
-          <p className="font-semibold"> Categorias </p>
-          <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map((category) => (
-              <button
-                key={category}
-                onClick={() => {
-                  handleFilter({
-                    type: "category",
-                    value: category,
-                  });
-                }}
-              >
-                {categorySelected.includes(category) ? (
-                  <Badge key={category} className="bg-opacity-5">
-                    {CATEGORIES_LABELS[category]}
-                  </Badge>
-                ) : (
-                  <Badge key={category} variant={"secondary"}>
-                    {CATEGORIES_LABELS[category]}
-                  </Badge>
-                )}
-              </button>
-            ))}
+          <div className="flex flex-col gap-2">
+            <p className="font-semibold"> Categorias </p>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => {
+                    handleFilter({
+                      type: "category",
+                      value: category,
+                    });
+                  }}
+                >
+                  {categorySelected.includes(category) ? (
+                    <Badge key={category} className="bg-opacity-5">
+                      {CATEGORIES_LABELS[category]}
+                    </Badge>
+                  ) : (
+                    <Badge key={category} variant={"secondary"}>
+                      {CATEGORIES_LABELS[category]}
+                    </Badge>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 };
 
