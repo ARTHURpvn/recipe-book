@@ -5,20 +5,7 @@ import { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "./selectInput";
 import { formField } from "../addRecipe";
-
-export type FormFields = {
-  name: string;
-  ingredient: string;
-  category: string;
-  quantityType: string;
-  description: string;
-  serving: string;
-  quantity: string;
-  instruction: string;
-  prepTime: string;
-  cookTime: string;
-  photo:  File | undefined;
-};
+import { FormFields } from "../_utils/constantes";
 
 type InputTypeProps = {
   input: string;
@@ -28,7 +15,13 @@ type InputTypeProps = {
   form: UseFormReturn<formField>;
 };
 
-const InputType = ({ input, name, field, placeholder, form }: InputTypeProps) => {
+const InputType = ({
+  input,
+  name,
+  field,
+  placeholder,
+  form,
+}: InputTypeProps) => {
   const setInputType = () => {
     let inputType: JSX.Element;
 
@@ -55,10 +48,12 @@ const InputType = ({ input, name, field, placeholder, form }: InputTypeProps) =>
         inputType = (
           <div className="flex items-center gap-2 file-input-wrapper">
             <Button variant={"white"} asChild>
-              <label htmlFor={`file-upload-${field.name}`}>Escolher arquivo</label>
+              <label htmlFor={`file-upload-${field.name}`}>
+                Escolher arquivo
+              </label>
             </Button>
             <Input
-              id={`file-upload-${field.name}`} 
+              id={`file-upload-${field.name}`}
               type="file"
               accept="image/*"
               className="hidden"
@@ -81,7 +76,13 @@ const InputType = ({ input, name, field, placeholder, form }: InputTypeProps) =>
 
       default:
         inputType = (
-          <Input placeholder={placeholder} type={input} {...field} value={field.value as string} required />
+          <Input
+            placeholder={placeholder}
+            type={input}
+            {...field}
+            value={field.value as string}
+            required
+          />
         );
     }
 
@@ -90,6 +91,5 @@ const InputType = ({ input, name, field, placeholder, form }: InputTypeProps) =>
 
   return setInputType();
 };
-
 
 export default InputType;

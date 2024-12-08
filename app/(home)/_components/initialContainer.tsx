@@ -19,12 +19,10 @@ import { Button } from "@/components/ui/button";
 
 const InitialContainer = () => {
   const [recipes, setRecipes] = useState<Array<RecipeProps>>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecipes = async () => {
       const recipes = await getAllRecipes();
-      setIsLoading(false);
       setRecipes(recipes);
     };
     fetchRecipes();
@@ -32,12 +30,6 @@ const InitialContainer = () => {
 
   return (
     <div className={`relative flex justify-center w-[80%] font-geist-sans`}>
-      {isLoading ? (
-        <>
-        
-        </>
-      ) : (
-
       <Carousel className=" w-full" plugins={[Autoplay({ delay: 10000 })]}>
         <CarouselPrevious />
         <CarouselContent>
@@ -47,17 +39,19 @@ const InitialContainer = () => {
                 <CardContent className="flex p-0">
                   <div className="relative w-1/2 bg-primary drop-shadow-[10px_0_10px_rgba(0,0,0,0.5)]">
                     {/* Criando a Badge */}
-                    <div className="absolute top-12 left-12 gap-6">
-                      {recipe.categories.map((category) => (
-                        <Badge
-                          variant="default"
-                          key={category.id}
-                          className=" bg-primary-foreground text-black gap-4 py-1 px-3 text-sm"
-                        >
-                          {/* Selecionando Icone de acordo com a categoria */}
-                          {CATEGORY_BY_ID[category.categoryId]}
-                        </Badge>
-                      ))}
+                    <div className="absolute top-12 left-12">
+                      <div className="flex gap-4">
+                        {recipe.categories.map((category) => (
+                          <Badge
+                            variant="default"
+                            key={category.id}
+                            className=" bg-primary-foreground text-black gap-4 py-1 px-3 text-sm"
+                          >
+                            {/* Selecionando Icone de acordo com a categoria */}
+                            {CATEGORY_BY_ID[category.categoryId]}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
 
                     <header className="space-y-4 mx-12 mt-32">
@@ -115,7 +109,6 @@ const InitialContainer = () => {
         </CarouselContent>
         <CarouselNext />
       </Carousel>
-      )}
     </div>
   );
 };

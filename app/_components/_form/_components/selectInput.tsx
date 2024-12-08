@@ -88,9 +88,8 @@ export function Combobox({
               {values.map((values) => (
                 <CommandItem
                   key={values.value}
-                  value={values.value}
+                  value={values.label}
                   onSelect={() => {
-                    // Atualiza o valor diretamente no formulário
                     form.setValue(type as keyof formField, values.value);
                     setValue(values.value);
                   }}
@@ -99,7 +98,7 @@ export function Combobox({
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === values.value ? "opacity-100" : "opacity-0"
+                      value === values.value ? "opacity-100" : "opacity-0",
                     )}
                   />
                 </CommandItem>
@@ -111,4 +110,3 @@ export function Combobox({
     </Popover>
   );
 }
-

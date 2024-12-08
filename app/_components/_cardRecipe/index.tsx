@@ -19,10 +19,10 @@ const CardRecipe = ({
   id,
 }: CardRecipeProps) => {
   return (
-    <Link href={`/recipe/?id=${id}`}>
+    <Link href={`/recipe/?id=${id}`} className="mt-20">
       <div
         className="flex flex-col relative items-center bg-gradient-to-t
-        from-accent/80 to-background w-60 h-72 overflow-hidden mt-20 rounded-xl"
+        from-accent/80 to-background w-60 h-72 overflow-hidden rounded-xl"
       >
         <div className="flex w-[90%] h-[60%] overflow-hidden rounded-xl">
           <Image
