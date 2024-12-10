@@ -9,8 +9,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +31,6 @@ const InitialContainer = () => {
   return (
     <div className={`relative flex justify-center w-[80%] font-geist-sans`}>
       <Carousel className=" w-full" plugins={[Autoplay({ delay: 10000 })]}>
-        <CarouselPrevious />
         <CarouselContent>
           {recipes.map((recipe) => (
             <CarouselItem key={recipe.id}>
@@ -109,8 +106,9 @@ const InitialContainer = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselNext />
       </Carousel>
+      <span className="absolute top-0 -right-56 z-10 w-24 bg-primary rounded-2xl h-full"></span>
+      <span className="absolute top-0 -left-56 z-10 w-24 bg-primary rounded-2xl h-full"></span>
     </div>
   );
 };

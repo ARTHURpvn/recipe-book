@@ -14,6 +14,7 @@ const Filters = () => {
     if (typeof window !== "undefined") {
       setIngredients(srcFilter.get("ingredients")?.split(",") as string[]);
       setCategories(srcFilter.get("categories")?.split(",") as string[]);
+      console.log(srcFilter.get("categories"));
     }
   }, [srcFilter]);
 

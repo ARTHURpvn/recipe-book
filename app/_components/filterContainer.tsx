@@ -51,12 +51,6 @@ const FilterContainer = () => {
       if (categorySelected.length > 0) {
         params.append("categories", categorySelected.join(","));
       }
-
-      window.history.replaceState(
-        null,
-        "",
-        `${window.location.pathname}?${params.toString()}`,
-      );
     }
   }, [ingredientSelected, categorySelected]);
 

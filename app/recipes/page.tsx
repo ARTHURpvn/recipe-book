@@ -49,7 +49,16 @@ const RecipesPage = () => {
         );
       }
 
-      setCategories(srcFilter.get("categories")?.split(",") as string[]);
+      if (srcFilter.get("categories")) {
+        const category: string = srcFilter.get("categories") as string;
+        console.log(category);
+
+        if (!category) return;
+        setCategories(
+          CATEGORIES_LABELS[category] ? [CATEGORIES_LABELS[category]] : [],
+        );
+        console.log(categories);
+      }
     }
   }, [srcFilter]);
 
@@ -129,7 +138,6 @@ const RecipesPage = () => {
 
     setFilteredRecipes(filteredRecipes);
   }, [search, ingredients, categories, recipes]);
-
   return (
     <>
       <Header />
